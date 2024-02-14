@@ -33,10 +33,8 @@ export function RecommendRestaurant(props: RecommendRestaurantProps) {
   React.useEffect(() => {
     const fetchData = async () => {
       const response = await foodsApis.getRecommendRestaurants()
-      if (response?.status) {
-        setData(response?.data)
-        setIsLoading(true)
-      }
+      setData(response?.data)
+      setIsLoading(true)
     }
     fetchData()
   }, [])

@@ -8,9 +8,8 @@ import { call, delay, put, takeLatest } from "redux-saga/effects"
 import { authActions } from "./AuthSlice"
 
 type ApiResAuth = {
-  status: boolean
-  type: string
-  message: string
+  refresh: string
+  access: string
   data: User
 }
 
@@ -19,8 +18,8 @@ function* handleLogin(action: PayloadAction<LoginForm>) {
     const res: ApiResAuth = yield call(authApi.login, action.payload)
     const user = res.data
     yield put(authActions.loginSuccess(user))
-    localStorage.setItem(StorageKeys.TOKEN, user.token)
-    localStorage.setItem(StorageKeys.NAMEUSER, user.accountName)
+    localStorage.setItem(StorageKeys.TOKEN, res.access)
+    localStorage.setItem(StorageKeys.NAMEUSER, user.account_name)
     localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
     History.push("/")
   } catch (error) {
@@ -35,8 +34,8 @@ function* handleRegister(action: PayloadAction<RegisterForm>) {
     const res: ApiResAuth = yield call(authApi.register, action.payload)
     const user = res.data
     yield put(authActions.registerSuccess(user))
-    localStorage.setItem(StorageKeys.TOKEN, user.token)
-    localStorage.setItem(StorageKeys.NAMEUSER, user.accountName)
+    localStorage.setItem(StorageKeys.TOKEN, res.access)
+    localStorage.setItem(StorageKeys.NAMEUSER, user.account_name)
     localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
     History.push("/")
   } catch (error) {

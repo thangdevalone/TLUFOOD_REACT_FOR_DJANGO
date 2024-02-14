@@ -34,14 +34,13 @@ export function RecommendFood(props: RecommendFoodProps) {
   React.useEffect(() => {
     const fetchData = async () => {
       const response = await foodsApis.getRecommendFoods()
-      if (response?.status) {
-        setData(response?.data)
-        setIsLoading(true)
-      }
+
+      setData(response?.data)
+      setIsLoading(true)
     }
     fetchData()
   }, [])
-  const { width } = useAppSelector(state=>state.app)
+  const { width } = useAppSelector((state) => state.app)
 
   //
 

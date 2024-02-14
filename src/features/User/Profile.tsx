@@ -183,10 +183,10 @@ export function Profile(props: ProfileProps) {
   }
   const form = useForm<InfoForm>({
     defaultValues: {
-      accountName: userInfo?.accountName || user?.accountName,
-      sdt: userInfo?.sdt || user?.sdt,
-      msv: userInfo?.username || user?.msv,
-      email: userInfo?.email || user?.email || undefined,
+      accountName: userInfo?.accountName || user?.account_name,
+      sdt: userInfo?.sdt ,
+      msv: userInfo?.username|| user?.username,
+      email: userInfo?.email || user?.email|| undefined,
     },
     resolver: yupResolver(schema),
   })
@@ -197,7 +197,7 @@ export function Profile(props: ProfileProps) {
         const response = await userApi.getUserInfo()
         if (response.status) {
           setUserInfo(response.data)
-          setImagePreview(response.data.img || user?.imgUser || "")
+          setImagePreview(response.data.img || user?.img_user || "")
         }
       } catch (err) {
         console.log(err)

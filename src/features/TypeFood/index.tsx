@@ -12,10 +12,8 @@ const TypeFood = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const response = await foodsApis.getTypeFoods()
-      if (response?.status) {
-        setData(response?.data)
-        setIsLoading(true)
-      }
+      setData(response?.data)
+      setIsLoading(true)
     }
     fetchData()
   }, [])

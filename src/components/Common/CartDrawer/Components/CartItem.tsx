@@ -104,7 +104,7 @@ const CartItem = (props: propsData) => {
               sx={{
                 backgroundPosition: "center",
                 backgroundSize: "cover",
-                backgroundImage: `url(${item.imgFood})`,
+                backgroundImage: `url(${item.imgFood ||"/assets/no_img.jpg"})`,
               }}
             ></Box>
             <Typography

@@ -1,12 +1,14 @@
 export interface User {
-  role: Role[]
-  token: string
   id: number
-  sdt: string
-  accountName: string
-  imgUser: string
-  msv: string
+  username: string
   email: string
+  create_date: string
+  modified_date: string
+  status: boolean
+  account_name: string
+  img_user: string
+  sdt: string
+  role:string
 }
 
 export interface Role {

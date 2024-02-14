@@ -20,7 +20,7 @@ export function MenuUser(props: MenuUserProps) {
   const { anchorEl, handleClose } = props
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const {width}=useAppSelector(state=>state.app)
+  const { width } = useAppSelector((state) => state.app)
   const user = useInforUser()
   const handleLogOut = () => {
     handleClose()
@@ -29,11 +29,11 @@ export function MenuUser(props: MenuUserProps) {
   }
   const navUser = () => {
     handleClose()
-    navigate(width>800?"/user/profile":"/user/account")
+    navigate(width > 800 ? "/user/profile" : "/user/account")
   }
   const handleAdmin = () => {
     handleClose()
-    window.open("https://admin.food.labtlu.shop","_blank")
+    window.open("https://admin.food.labtlu.shop", "_blank")
   }
   const handleOrders = () => {
     handleClose()
@@ -83,15 +83,13 @@ export function MenuUser(props: MenuUserProps) {
         </ListItemIcon>
         Tài khoản
       </MenuItem>
-      {user?.role[0].authority === "ADMIN" && (
-        
-          <MenuItem onClick={handleAdmin}>
-            <ListItemIcon>
-              <StorageOutlined fontSize="small" />
-            </ListItemIcon>
-            Trang quản trị
-          </MenuItem>
-
+      {user?.role === "ADMIN" && (
+        <MenuItem onClick={handleAdmin}>
+          <ListItemIcon>
+            <StorageOutlined fontSize="small" />
+          </ListItemIcon>
+          Trang quản trị
+        </MenuItem>
       )}
       <Divider />
       <MenuItem onClick={handleOrders}>

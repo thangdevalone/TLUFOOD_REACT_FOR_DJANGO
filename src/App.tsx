@@ -5,13 +5,13 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { Route, Routes, useNavigate } from "react-router-dom"
 import "./App.css"
 import { appActions } from "./app/AppSlice"
-import { useAppDispatch, useAppSelector } from "./app/hooks"
+import { useAppDispatch } from "./app/hooks"
 import { LoadServer, NotFound } from "./components/Common"
 import { Home } from "./components/Layouts/Home"
 import { Store } from "./components/Layouts/ListItem"
@@ -30,7 +30,6 @@ import { authActions } from "./features/auth/AuthSlice"
 import ForgotPassword from "./features/auth/pages/ForgotPassword"
 import { LoginPage } from "./features/auth/pages/LoginPage"
 import RedirectRole from "./features/auth/pages/RedirectRole"
-import { useInforUser } from "./hooks"
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window
   return {
@@ -47,10 +46,9 @@ function App() {
     navigate("/login")
     setOpen(false)
   }
+  const { width } = getWindowDimensions()
   const theme = useTheme()
   const dispatch = useAppDispatch()
-  const { width } = useAppSelector((state:any) => state.app)
-  const user = useInforUser()
   useEffect(() => {
     function handleResize() {
       dispatch(appActions.setWidth(getWindowDimensions().width))
@@ -58,26 +56,6 @@ function App() {
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
-  const location = useLocation()
-  useEffect(() => {
-    if (user) {
-      if (!user.token) {
-        // Nếu không có token, người dùng đã đăng xuất
-        // Thực hiện đăng xuất ở đây
-        dispatch(authActions.logout())
-        return
-      }
-
-      const tokenData = JSON.parse(atob(user.token.split(".")[1])) // Giải mã phần data trong token
-      const expirationTime = tokenData.exp * 1000 // Chuyển từ giây sang mili giây
-      const currentTime = Date.now()
-      if (currentTime > expirationTime) {
-        // Token đã hết hạn
-        // Thực hiện đăng xuất ở đây
-        setOpen(true)
-      }
-    }
-  }, [location])
 
   return (
     <ThemeProvider theme={theme}>
@@ -114,7 +92,7 @@ function App() {
             }
           />
           <Route path="/" element={<Home />} />
-          {/* <Route path="/user/*" element={<User />}>
+          <Route path="/user/*" element={<User />}>
             <Route path="orders" element={<UserOrders />} />
             {width > 800 ? (
               <>
@@ -125,15 +103,15 @@ function App() {
               <Route path="account" element={<Account />} />
             )}
             <Route path="*" element={<NotFound />}></Route>
-          </Route> */}
+          </Route>
           <Route path="/store" element={<Store />}>
             <Route path="get-all-store" element={<GetAllStore />} />
             <Route path="get-all-food" element={<AllFood />} />
             <Route path="detail-store/:idStore" element={<DetailStore />} />
             <Route path="type-food/:idTypeFood" element={<FoodByType />} />
           </Route>
-          {/* <Route path="/search" element={<SearchList />}></Route> */}
-          {/* <Route path="/checkout" element={<ProtectCheckout />} /> */}
+          <Route path="/search" element={<SearchList />}></Route>
+          <Route path="/checkout" element={<ProtectCheckout />} />
           <Route element={<ProtectAuth />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RedirectRole />} />

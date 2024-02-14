@@ -3,15 +3,15 @@ import { PageConfig } from "@/models"
 
 const foodsApis = {
   getRecommendFoods() {
-    const url = "auth/get-recommend-food"
+    const url = "prod/rec-food"
     return axiosClient.get(url)
   },
   getTypeFoods() {
-    const url = "auth/get-all-type"
+    const url = "prod/all-type"
     return axiosClient.get(url)
   },
   getRecommendRestaurants() {
-    const url = "auth/get-recommend-res"
+    const url = "prod/rec-res"
     return axiosClient.get(url)
   },
   getDetailStore(id: number) {

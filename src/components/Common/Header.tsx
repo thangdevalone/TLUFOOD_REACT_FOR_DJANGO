@@ -23,6 +23,7 @@ export interface HeaderProps {
 export function Header(props: HeaderProps) {
   const { sx, className, isWhiteLogo = true,theme="default",noItem=false } = props
   const user = useInforUser()
+  console.log(user)
   const dispatch = useAppDispatch()
   const scrollY = useScroll()
   const totalPrice = useAppSelector((state) => state.cart.totalPrice)
@@ -289,10 +290,10 @@ export function Header(props: HeaderProps) {
                     cursor: "pointer",
                     width: width <= 500 ? 35 : 45,
                     height: width <= 500 ? 35 : 45,
-                    border: "1px solid #f0efef",
+                    border: width <= 700 ? "1px solid #9b9a9a" : "1px solid #f0efef",
                   }}
                   onClick={handleClick}
-                  src={user.imgUser}
+                  src={user.img_user}
                 />
 
                 <MenuUser anchorEl={anchorEl} handleClose={handleClose} />
