@@ -62,7 +62,7 @@ export function RegisterPage(props: RegisterPageProps) {
     setChecked(event.target.checked)
   }
   const schema = yup.object().shape({
-    name: yup
+    account_name: yup
       .string()
       .required("Hãy nhập tên đầy đủ của bạn")
       .test(
@@ -89,7 +89,7 @@ export function RegisterPage(props: RegisterPageProps) {
         },
       )
       .matches(/^A\d{5}$/, "Mã sinh viên không hợp lệ"),
-    phoneNumber: yup
+    sdt: yup
       .string()
       .required("Điền số điện thoại")
       .matches(phoneRegExp, "Số điện thoại không hợp lệ")
@@ -102,7 +102,7 @@ export function RegisterPage(props: RegisterPageProps) {
       .max(32, "Mật khẩu quá dài")
       .matches(/[A-Z]+/, "Mật khẩu cần ít nhất 1 kí tự in hoa")
       .matches(/[a-z]+/, "Mật khẩu cần ít nhất 1 kí tự in thường"),
-    rePassword: yup
+    re_password: yup
       .string()
       .required("Nhập lại mật khẩu")
       .oneOf([yup.ref("password")], "Mật khẩu không khớp"),
@@ -115,7 +115,7 @@ export function RegisterPage(props: RegisterPageProps) {
   const handleRegister: SubmitHandler<RegisterForm> = (data) => {
     const rsData: RegisterForm = {
       ...data,
-      name: data.name.replace(/\s+/g, " ").trim(),
+      account_name: data.account_name.replace(/\s+/g, " ").trim(),
     }
     dispatch(authActions.register(rsData))
   }
@@ -258,7 +258,7 @@ export function RegisterPage(props: RegisterPageProps) {
                   onSubmit={form.handleSubmit(handleRegister)}
                   sx={{ mt: 2 }}
                 >
-                  <InputField name="name" label="Họ và tên" />
+                  <InputField name="account_name" label="Họ và tên" />
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <InputField
@@ -268,12 +268,12 @@ export function RegisterPage(props: RegisterPageProps) {
                       />
                     </Grid>
                     <Grid item xs={6}>
-                      <InputField name="phoneNumber" label="Số điện thoại" />
+                      <InputField name="sdt" label="Số điện thoại" />
                     </Grid>
                   </Grid>
 
                   <PasswordField name="password" label="Mật khẩu" />
-                  <PasswordField name="rePassword" label="Nhập lại mật khẩu" />
+                  <PasswordField name="re_password" label="Nhập lại mật khẩu" />
                   <FormControlLabel
                     control={
                       <Checkbox

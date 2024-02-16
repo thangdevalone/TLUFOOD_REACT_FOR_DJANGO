@@ -5,12 +5,8 @@ import axiosClient from "./axiosClient"
 
 const userApi = {
   getAllVoucher() {
-    const url = `user/get-all-voucher`
-    return axiosClient.post(url)
-  },
-  addOrder(data: BillConfig) {
-    const url = `user/add-bill`
-    return axiosClient.post(url, data)
+    const url = `payment/vouchers`
+    return axiosClient.get(url)
   },
   getBill(page: PageConfig, status: string | null) {
     if (status) {
@@ -63,7 +59,7 @@ const userApi = {
       formData.append("accountName", data.accountName)
     }
     const url = "user/update-user-info"
-    return axiosClient.put(url, formData, {
+    return axiosClient.patch(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

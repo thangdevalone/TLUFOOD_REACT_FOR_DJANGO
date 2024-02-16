@@ -11,12 +11,7 @@ export interface User {
   role:string
 }
 
-export interface Role {
-  id: number
-  createDate: any
-  status: any
-  authority: string
-}
+
 
 export interface UpdatePassWord {
   password: string

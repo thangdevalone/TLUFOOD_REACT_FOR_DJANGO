@@ -22,10 +22,8 @@ const SearchList = () => {
   const { enqueueSnackbar } = useSnackbar()
   const fetchData = async (search: string) => {
     const response = await foodsApis.searchFoods(search)
-    if (response?.status) {
       setDataSearch(response.data)
       navigate(`/search?key=${search}`)
-    }
   }
 
   const handleSearch = () => {
@@ -141,7 +139,7 @@ const SearchList = () => {
                     detail={item.detail}
                     imgFood={item.imgFood}
                     idRes={item.restaurantEntityId}
-                    toppingList={item.toppingEntityList}
+                    toppingList={item.toppingList}
                     foodName={item.foodName}
                     price={item.price}
                     distance={item.distance || 0}

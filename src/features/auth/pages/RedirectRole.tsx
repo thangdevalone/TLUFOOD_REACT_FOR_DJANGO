@@ -1,7 +1,6 @@
-import * as React from "react"
-import { RegisterGV } from "./RegisterGV"
-import { RegisterPage } from "./RegisterPage"
 import { Button, Container, Stack } from "@mui/material"
+import * as React from "react"
+import { RegisterPage } from "./RegisterPage"
 import "./styles.css"
 export interface RedirectRoleProps {}
 
@@ -12,7 +11,8 @@ export default function RedirectRole(props: RedirectRoleProps) {
     <>
       {haveRole ? (
         role === "GV" ? (
-          <RegisterGV />
+          // <RegisterGV />
+          "Not Found"
         ) :(
           <RegisterPage />
         )

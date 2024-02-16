@@ -8,6 +8,7 @@ export interface AuthState {
   registering?: boolean
   actionAuth: "No action" | "Success" | "Failed"
   currentUser?: User
+  token:string
 }
 
 const initialState: AuthState = {
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   registering: false,
   actionAuth: "No action",
   currentUser: undefined,
+  token:""
 }
 
 export const authSlice = createSlice({
@@ -50,6 +52,9 @@ export const authSlice = createSlice({
       state.registering = false
       state.actionAuth = "Success"
       state.currentUser = action.payload
+    },
+    setToken(state,action:PayloadAction<string>){
+      state.token=action.payload
     },
     registerFailed(state) {
       state.registering = false

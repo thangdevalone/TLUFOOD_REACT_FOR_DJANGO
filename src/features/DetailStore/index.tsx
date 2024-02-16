@@ -22,10 +22,8 @@ const DetailStore = (props: DetailProps) => {
     const fetchData = async () => {
       if (idStore) {
         const response = await foodsApis.getDetailStore(+idStore)
-        if (response?.status) {
           setData(response.data)
           setIsLoading(true)
-        }
       }
     }
     fetchData()
@@ -34,7 +32,7 @@ const DetailStore = (props: DetailProps) => {
 
   const breadcrumbItems = [
     { name: "Cửa hàng", link: "/store/get-all-store" },
-    { name: `${data?.restaurantName}`, link: "/" },
+    { name: `${data?.restaurant_name}`, link: "/" },
   ]
 
   return (
@@ -55,7 +53,7 @@ const DetailStore = (props: DetailProps) => {
                   ) : (
                     <>
                       <Typography variant="h4" sx={{ fontWeight: 500, mb: 1 }}>
-                        {data.restaurantName}
+                        {data.restaurant_name}
                       </Typography>
                       <p className="text-[#676767] text-sm py-1 ">
                         {data.detail}
@@ -96,7 +94,7 @@ const DetailStore = (props: DetailProps) => {
                           Giờ mở cửa
                         </span>{" "}
                         <span className="text-sm text-[#676767]">
-                          Hôm nay {data.timeStart}-{data.timeClose}
+                          Hôm nay {data.time_start}-{data.time_close}
                         </span>
                       </p>
                       <div className="flex flex-row item-center gap-3 my-2">
@@ -127,7 +125,7 @@ const DetailStore = (props: DetailProps) => {
                     ) : (
                       <>
                         <img
-                          src={data.imgRes}
+                          src={data.img_res}
                           className="h-[100%] w-auto max-h-[250px] max-w-[350px] object-cover rounded-lg "
                           alt=""
                         />
@@ -161,14 +159,14 @@ const DetailStore = (props: DetailProps) => {
                   </>
                 ) : (
                   <>
-                    {data.foodRecommendDtos.map((item) => (
+                    {data.foods.map((item) => (
                       <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                         <ItemFood
                           idFood={item.id}
                           detail={item.detail}
                           imgFood={item.imgFood}
                           idRes={item.restaurantEntityId}
-                          toppingList={data.toppingEntityList}
+                          toppingList={data.toppingList}
                           foodName={item.foodName}
                           price={item.price}
                           distance={item.distance || 0}

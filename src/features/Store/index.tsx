@@ -22,17 +22,15 @@ const GetAllStore = (props: propsData) => {
         pageIndex,
         pageSize: 10,
       })
-      if (response?.status) {
-        const myFood = response.data as ResFood
-        const newData = [...data, ...myFood.responList]
+        const myFood = response as unknown as ResFood
+        const newData = [...data, ...myFood.data]
         setData(newData)
         setIsLoading(true)
         if (newData.length >= myFood.totalRow) {
           setHasMore(false)
         } else {
-          setPageIndex(pageIndex + 1)
+          setPageIndex(pageIndex+1)
         }
-      }
     } catch (err) {
       console.log(err)
     }

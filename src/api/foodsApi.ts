@@ -15,28 +15,28 @@ const foodsApis = {
     return axiosClient.get(url)
   },
   getDetailStore(id: number) {
-    const url = `auth/get-detail-res?id=${id}`
-    return axiosClient.post(url)
+    const url = `prod/detail-res/${id}`
+    return axiosClient.get(url)
   },
   getDetailFood(id: number) {
     const url = `auth/get-detail-food?id=${id}`
     return axiosClient.post(url)
   },
   getDetailType(id: number) {
-    const url = `auth/get-detail-type?id=${id}`
-    return axiosClient.post(url)
+    const url = `prod/paging-food-type/${id}`
+    return axiosClient.get(url)
   },
   searchFoods(search: string) {
-    const url = `auth/search-food?searchString=${search}`
-    return axiosClient.post(url)
+    const url = `prod/search-food?searchString=${search}`
+    return axiosClient.get(url)
   },
   pagingFood(page: PageConfig) {
-    const url = `auth/paging-food-admin?pageSize=${page.pageSize}&pageIndex=${page.pageIndex}`
-    return axiosClient.post(url)
+    const url = `prod/paging-food?pageSize=${page.pageSize}&pageIndex=${page.pageIndex+1}`
+    return axiosClient.get(url)
   },
   pagingRes(page: PageConfig) {
-    const url = `auth/paging-res?pageSize=${page.pageSize}&pageIndex=${page.pageIndex}`
-    return axiosClient.post(url)
+    const url = `prod/paging-res?pageSize=${page.pageSize}&pageIndex=${page.pageIndex+1}`
+    return axiosClient.get(url)
   },
 }
 

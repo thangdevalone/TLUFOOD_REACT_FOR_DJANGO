@@ -144,7 +144,7 @@ export function Home(props: HomeProps) {
             <section className="container-base base-pd type-food">
               <TypeFood />
             </section>
-            <p className="base-tx base-pd mb-[16px]">IotFood có gì nổi bật?</p>
+            <p className="base-tx base-pd mb-[16px]">TLUFOOD có gì nổi bật?</p>
             <section className="container-base base-pd why-choose">
               <WhyChoose /> 
             </section>

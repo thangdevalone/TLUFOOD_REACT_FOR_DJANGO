@@ -40,7 +40,7 @@ export function Footer(props: FooterProps) {
               }}
             >
               <p className="mb-2 font-semibold text-lg">Phát triển bởi</p>
-              {/* <Stack direction="column" spacing={1}>
+              <Stack direction="column" spacing={1}>
                 <Typography
                   sx={{
                     "&:hover": { textDecoration: "underline" },
@@ -48,7 +48,7 @@ export function Footer(props: FooterProps) {
                   }}
                 >
                   <Link to={"https://github.com/thangdevalone"} target="_blank">
-                    thangdevalone (FE)
+                    thangdevalone
                   </Link>
                 </Typography>
                 <Typography
@@ -58,7 +58,7 @@ export function Footer(props: FooterProps) {
                   }}
                 >
                   <Link to={"https://github.com/haidaqn"} target="_blank">
-                    haidaqn (FE)
+                    haidaqn 
                   </Link>
                 </Typography>
                 <Typography
@@ -67,12 +67,12 @@ export function Footer(props: FooterProps) {
                     width: "fit-content",
                   }}
                 >
-                  <Link to={"https://github.com/vietcoi2k3"} target="_blank">
+                  {/* <Link to={"https://github.com/vietcoi2k3"} target="_blank">
                     vietcoi2k3 (BE)
-                  </Link>
+                  </Link> */}
                 </Typography>
                
-              </Stack> */}
+              </Stack>
             </Box>
           </Grid>
           <Grid item xs={3}>
@@ -85,7 +85,7 @@ export function Footer(props: FooterProps) {
               }}
             >
               <p className="mb-2 font-semibold text-lg">Dẫn dắt bởi</p>
-              {/* <Stack direction="column" spacing={1}>
+              <Stack direction="column" spacing={1}>
                 <Typography
                   sx={{
                     "&:hover": { textDecoration: "underline" },
@@ -93,13 +93,13 @@ export function Footer(props: FooterProps) {
                   }}
                 >
                   <Link
-                    to={"https://www.facebook.com/giang.bui.3511"}
+                    to={"#"}
                     target="_blank"
                   >
-                    Bùi Trường Giang (Teacher_TLU)
+                    Nguyễn Hùng Cường (Teacher_TLU)
                   </Link>
                 </Typography>
-              </Stack> */}
+              </Stack>
             </Box>
           </Grid>
           <Grid item xs={3}>

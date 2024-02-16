@@ -111,7 +111,7 @@ export function Profile(props: ProfileProps) {
       handleSendOtp(data.email)
     }
     if (
-      data.accountName !== user?.accountName ||
+      data.accountName !== user?.account_name ||
       data.sdt !== user?.sdt ||
       file !== null
     ) {
@@ -166,8 +166,7 @@ export function Profile(props: ProfileProps) {
         img: file,
         sdt,
       })
-      const resInfor = await userApi.getUserInfo()
-      dispatch(authActions.updateInfor(resInfor.data))
+      dispatch(authActions.updateInfor(response.data))
       enqueueSnackbar("Thay đổi thành công !", {
         variant: "success",
       })

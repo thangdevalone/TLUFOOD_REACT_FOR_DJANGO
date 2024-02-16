@@ -15,10 +15,10 @@ export function PagingFood(props: RecommendFoodProps) {
   const fetchData = async () => {
     const response = await foodsApis.pagingFood({
       pageIndex,
-      pageSize: 4,
+      pageSize: 10,
     })
     if (response?.status) {
-      const myFood = response.data as FoodRoot
+      const myFood = response as unknown as FoodRoot
       const newData = [...data, ...myFood.data]
       setData(newData)
       if (newData.length >= myFood.totalRow) {
@@ -89,7 +89,7 @@ export function PagingFood(props: RecommendFoodProps) {
                   detail={item.detail}
                   imgFood={item.imgFood}
                   idRes={item.restaurantEntityId}
-                  toppingList={item.toppingEntityList}
+                  toppingList={item.toppingList}
                   foodName={item.foodName}
                   price={item.price}
                   distance={item.distance || 0}

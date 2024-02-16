@@ -21,6 +21,7 @@ function* handleLogin(action: PayloadAction<LoginForm>) {
     localStorage.setItem(StorageKeys.TOKEN, res.access)
     localStorage.setItem(StorageKeys.NAMEUSER, user.account_name)
     localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
+    yield put(authActions.setToken(res.access))
     History.push("/")
   } catch (error) {
     // Handle the error here
@@ -37,6 +38,7 @@ function* handleRegister(action: PayloadAction<RegisterForm>) {
     localStorage.setItem(StorageKeys.TOKEN, res.access)
     localStorage.setItem(StorageKeys.NAMEUSER, user.account_name)
     localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
+    yield put(authActions.setToken(res.access))
     History.push("/")
   } catch (error) {
     // Handle the error here

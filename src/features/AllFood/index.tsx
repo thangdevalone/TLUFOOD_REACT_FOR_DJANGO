@@ -19,16 +19,14 @@ const AllFood = () => {
       pageIndex,
       pageSize: 10,
     })
-    if (response?.status) {
-      const myFood = response.data as FoodRoot
-      const newData = [...data, ...myFood.data]
-      setData(newData)
-      setIsLoading(true)
-      if (newData.length >= myFood.totalRow) {
-        setHasMore(false)
-      } else {
-        setPageIndex(pageIndex + 1)
-      }
+    const myFood = response as unknown as FoodRoot
+    const newData = [...data, ...myFood.data]
+    setData(newData)
+    setIsLoading(true)
+    if (newData.length >= myFood.totalRow) {
+      setHasMore(false)
+    } else {
+      setPageIndex(pageIndex + 1)
     }
   }
 
@@ -58,7 +56,6 @@ const AllFood = () => {
       scrollContainer?.removeEventListener("scroll", handleScroll)
     }
   }, [hasMore])
-
   return (
     <Box className="flex flex-col gap-5 container-base base-pd">
       <BreadcrumbsCommon items={breadcrumbItems} />
@@ -68,7 +65,11 @@ const AllFood = () => {
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
       >
-        <Grid className="pb-10" container spacing={{ xs: 2, sm: 2, md: 2, lg: 3 }}>
+        <Grid
+          className="pb-10"
+          container
+          spacing={{ xs: 2, sm: 2, md: 2, lg: 3 }}
+        >
           {!isLoading ? (
             <>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
@@ -87,6 +88,7 @@ const AllFood = () => {
                     imgFood={item.imgFood}
                     idRes={item.restaurantEntityId}
                     foodName={item.foodName}
+                    toppingList={item.toppingList}
                     price={item.price}
                     distance={item.distance || 0}
                     qSold={item.quantityPurchased || 0}

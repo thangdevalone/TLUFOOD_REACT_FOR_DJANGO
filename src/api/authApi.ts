@@ -1,5 +1,5 @@
-import { RegisterForm, RegisterFormApi } from "../models/RegisterForm"
 import { LoginForm } from "../models/LoginForm"
+import { RegisterForm } from "../models/RegisterForm"
 import axiosClient from "./axiosClient"
 
 const authApi = {
@@ -9,13 +9,7 @@ const authApi = {
   },
   register(data: RegisterForm) {
     const url = "auth/register"
-    const form: RegisterFormApi = {
-      accountName: data.name,
-      password: data.password,
-      username: data.username,
-      sdt: data.phoneNumber,
-    }
-    return axiosClient.post(url, form)
+    return axiosClient.post(url, data)
   },
   hello() {
     const url = "auth/hello"

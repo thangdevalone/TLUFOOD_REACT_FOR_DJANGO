@@ -23,7 +23,6 @@ export interface HeaderProps {
 export function Header(props: HeaderProps) {
   const { sx, className, isWhiteLogo = true,theme="default",noItem=false } = props
   const user = useInforUser()
-  console.log(user)
   const dispatch = useAppDispatch()
   const scrollY = useScroll()
   const totalPrice = useAppSelector((state) => state.cart.totalPrice)

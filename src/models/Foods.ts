@@ -19,18 +19,18 @@ export interface RestaurantData {
 }
 export interface StoreDetailData {
   id: number
-  createDate: string
+  create_date: string
   status: boolean
-  restaurantName: string
-  quantitySold: any
+  restaurant_name: string
+  quantity_sold: number
   distance: number
   star: number
-  timeStart: string
-  timeClose: string
+  time_start: string
+  time_close: string
   detail: string
-  imgRes: string
-  toppingEntityList: ToppingEntityList[]
-  foodRecommendDtos: foodData[]
+  img_res: string
+  toppingList: ToppingEntityList[]
+  foods: foodData[]
 }
 
 export interface ToppingEntityList {
@@ -55,12 +55,12 @@ export interface foodData {
   imgFood: string
   createBy: string
   createAt: string
-  quantityPurchased: any
+  quantityPurchased: number
   typeFoodEntityId: number
+  toppingList: ToppingEntityList[]
   restaurantEntityId: number
   status: boolean
   distance: number
-  toppingEntityList: ToppingEntityList[]
   nameType: string
 }
 
@@ -80,8 +80,11 @@ export interface FoodRoot {
   totalRow: number
   data: foodData[]
 }
-
+export interface TypeFoodRoot {
+  nameType: string
+  data: foodData[]
+}
 export interface ResFood {
   totalRow: number
-  responList: RestaurantData[]
+  data: RestaurantData[]
 }

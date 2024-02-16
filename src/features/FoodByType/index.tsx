@@ -2,7 +2,7 @@ import foodsApis from "@/api/foodsApi"
 import { ItemFood } from "@/components/Common"
 import BreadcrumbsCommon from "@/components/Common/Breadcrumbs"
 import { SkeletonType } from "@/components/Common/Skeleton"
-import { foodData } from "@/models"
+import { TypeFoodRoot, foodData } from "@/models"
 import { Box, Grid } from "@mui/material"
 import * as React from "react"
 import { useParams } from "react-router-dom"
@@ -16,9 +16,9 @@ const FoodByType = () => {
     try {
       const fetchData = async () => {
         if (idTypeFood) {
-          const response = await foodsApis.getDetailType(+idTypeFood)
-          setData(response.data.foodRecommendDtos)
-          setNameType(response.data.nameType)
+          const response = await foodsApis.getDetailType(+idTypeFood) as unknown as TypeFoodRoot
+          setData(response.data)
+          setNameType(response.nameType)
           setIsLoading(true)
         }
       }
@@ -52,7 +52,7 @@ const FoodByType = () => {
                   detail={item.detail}
                   imgFood={item.imgFood}
                   idRes={item.restaurantEntityId}
-                  toppingList={item.toppingEntityList}
+                  toppingList={item.toppingList}
                   foodName={item.foodName}
                   price={item.price}
                   distance={item.distance || 0}
