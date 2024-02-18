@@ -1,6 +1,6 @@
 import { BillConfig, PageConfig } from "./../models/Config"
 import { ForgotPassword, ChangePassword } from "@/models/ForgotForm"
-import { UpdateInformationUser, InfoUserChange } from "@/models"
+import { UpdateInformationUser, InfoUserChange, UpdatePassWord } from "@/models"
 import axiosClient from "./axiosClient"
 
 const userApi = {
@@ -77,6 +77,14 @@ const userApi = {
   finalOtpChangeInfoUser(otp: string) {
     const url = `auth/final-update-info-user/${otp}`
     return axiosClient.post(url)
+  },
+  forgotPasswordUser(username: string) {
+    const url = `auth/forgot-password/${username}`
+    return axiosClient.post(url)
+  },
+  changePasswordUser(username: string, data: UpdatePassWord) {
+    const url = `auth/change-password/${username}`
+    return axiosClient.post(url, data)
   },
 }
 export default userApi

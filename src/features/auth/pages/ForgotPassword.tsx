@@ -107,21 +107,22 @@ const ForgotPassword = () => {
       document.body.style.overflow = "hidden scroll"
     }
   }, [])
-  const handleSubmit: SubmitHandler<ForgotForm> = (data) => {
-    if (openPassword) {
-      if (data.otp?.length && data.newPassword?.length) {
-        handleForgotPassword({
-          newPassword: data.newPassword,
-          username: data.username,
+  const handleSubmit: SubmitHandler<ForgotForm> = async (data) => {
+    setLoading(true)
+    await userApi
+      .forgotPasswordUser(data.username)
+      .then(() => {
+        enqueueSnackbar("Mật khẩu mới đã được gửi về email bạn đăng ký !", {
+          variant: "success",
         })
-      }
-    }
-    if (openOtp && !openPassword) {
-      if (data.otp?.length) {
-        handleConfirmOtp(data.otp, data.username)
-      }
-    }
-    if (!openOtp && !openPassword) handleSendOtp(data.username)
+        setLoading(false)
+      })
+      .catch(() => {
+        enqueueSnackbar("Gửi email cấp mật khẩu thất bại !", {
+          variant: "error",
+        })
+        setLoading(false)
+      })
   }
   const navigate = useNavigate()
   const handleHome = () => {

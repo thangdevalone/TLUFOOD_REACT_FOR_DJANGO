@@ -1,5 +1,6 @@
 import userApi from "@/api/userApi"
 import { PasswordField } from "@/components/FormControls"
+import { useInforUser } from "@/hooks"
 import { UpdatePassWord } from "@/models"
 import { yupResolver } from "@hookform/resolvers/yup"
 import {
@@ -11,7 +12,7 @@ import {
 } from "@mui/material"
 import { useSnackbar } from "notistack"
 import React, { useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
 
@@ -19,20 +20,20 @@ export interface ChangePasswordProps {}
 
 export function ChangePassword(props: ChangePasswordProps) {
   const schema = yup.object().shape({
-    password: yup.string().required("Vui lòng nhập mật khẩu cũ !"),
-    newPassword: yup
+    current_password: yup.string().required("Vui lòng nhập mật khẩu cũ !"),
+    new_password: yup
       .string()
       .required("Vui lòng nhập mật khẩu mới !")
       .min(8, "Mật khẩu mới phải có ít nhất 8 ký tự"),
-    passwordNewConfirm: yup
+    confirm_password: yup
       .string()
       .required("Vui lòng xác nhận mật khẩu mới !")
       .oneOf(
         [yup.ref("newPassword"), ""],
         "Mật khẩu xác nhận không trùng khớp với mật khẩu mới",
-      )
-      .nullable(),
+      ),
   })
+  const user = useInforUser()
   const formRef = useRef<any>(null)
   const form = useForm<UpdatePassWord>({
     resolver: yupResolver(schema),
@@ -45,32 +46,25 @@ export function ChangePassword(props: ChangePasswordProps) {
       formRef.current.reset()
     }
   }
-  const handleSubmitChangePw = async (
-    password: string,
-    newPassword: string,
-  ) => {
+  const handleSubmitChangePw: SubmitHandler<UpdatePassWord> = async (data) => {
     try {
       setLoading(true)
-      const response = await userApi.updateUserInformation({
-        password,
-        newPassword,
-        accountName: null,
-        img: null,
-        sdt: null,
-      })
-      if (response.status) {
-        setLoading(false)
-        enqueueSnackbar("Đổi mật khẩu thành công !", {
-          variant: "success",
+      await userApi
+        .changePasswordUser(user?.username || "", data)
+        .then(() => {
+          setLoading(false)
+          reset()
+          navigate("/user/profile")
+          enqueueSnackbar("Đổi mật khẩu thành công !", {
+            variant: "success",
+          })
         })
-        reset()
-        navigate("/user/profile")
-      } else {
-        setLoading(false)
-        enqueueSnackbar("Đổi mật khẩu thất bại !", {
-          variant: "error",
+        .catch(() => {
+          setLoading(false)
+          enqueueSnackbar("Đổi mật khẩu thất bại !", {
+            variant: "error",
+          })
         })
-      }
     } catch (err) {
       console.log(err)
     }
@@ -95,21 +89,26 @@ export function ChangePassword(props: ChangePasswordProps) {
               ref={formRef}
               style={{ display: "flex", flexDirection: "column" }}
               className="flex items-center justify-center"
-              onSubmit={form.handleSubmit((data) =>
-                handleSubmitChangePw(data.password, data.newPassword),
-              )}
+              onSubmit={form.handleSubmit(handleSubmitChangePw)}
             >
-              <PasswordField label="Mật khẩu cũ" name="password" />
-              <PasswordField label="Mật khẩu mới" name="newPassword" />
+              <PasswordField label="Mật khẩu cũ" name="current_password" />
+              <PasswordField label="Mật khẩu mới" name="new_password" />
               <PasswordField
                 label="Nhập lại mật khẩu mới"
-                name="passwordNewConfirm"
+                name="confirm_password"
               />
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: "20px", width: "100%" }}
+                // onClick={() =>
+                //   handleSubmitChangePw({
+                //     current_password: form.getValues("current_password"),
+                //     new_password: form.getValues("new_password"),
+                //     confirm_password: form.getValues("confirm_password"),
+                //   })
+                // }
               >
                 Lưu
               </Button>
