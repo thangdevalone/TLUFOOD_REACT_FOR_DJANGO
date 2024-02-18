@@ -34,3 +34,10 @@ export interface UserInfo {
   sdt: string
   username: string
 }
+
+export interface InfoUserChange {
+  email: string
+  account_name: string
+  sdt: string
+  img_user: string
+}
