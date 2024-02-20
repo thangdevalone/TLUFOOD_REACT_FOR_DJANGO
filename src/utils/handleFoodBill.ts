@@ -12,7 +12,7 @@ interface Food {
   quantity: number;
   nameRes: string;
   resId: number;
-  itemList: any;
+  item_list: any;
 }
 
 export function handleFoodBill(data: FoodResponseBill[]): FoodBill[] {

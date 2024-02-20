@@ -118,6 +118,7 @@ export interface VoucherResponseBill {
 }
 export interface BillUser {
   id: number
+  accountName:string,
   create_date: string
   orderStatus: "PENDING"| "PROCESSING"|"DELIVERED"|"CANCELED"
   ship_fee: number
