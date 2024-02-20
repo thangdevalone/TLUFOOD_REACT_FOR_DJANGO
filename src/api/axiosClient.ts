@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { STATIC_HOST } from "../constants/common"
 
 const axiosClient = axios.create({
@@ -30,10 +30,16 @@ axiosClient.interceptors.response.use(
     // Do something with response data
     return response.data
   },
-  function (error: { response: { data: any } }) {
+  function (error: AxiosError ) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    return Promise.reject(error.response.data)
+    if (error.response && error.response.status === 401) {
+      // Đăng xuất người dùng và chuyển hướng sang trang đăng nhập
+      // Xóa token khỏi localStorage hoặc thực hiện bất kỳ thao tác cần thiết để đăng xuất người dùng
+
+      console.log("het han token")
+    }
+    return Promise.reject(error.response?.data)
   },
 )
 

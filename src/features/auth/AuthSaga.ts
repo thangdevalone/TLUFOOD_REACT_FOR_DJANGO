@@ -47,14 +47,9 @@ function* handleRegister(action: PayloadAction<RegisterForm>) {
     yield put(authActions.resetAction())
   }
 }
-function* handleLogout() {
-  localStorage.removeItem(StorageKeys.TOKEN)
-  localStorage.removeItem(StorageKeys.NAMEUSER)
-  localStorage.removeItem(StorageKeys.USER)
-}
+
 
 export function* authSaga() {
   yield takeLatest(authActions.login.type, handleLogin)
   yield takeLatest(authActions.register.type, handleRegister)
-  yield takeLatest(authActions.logout.type, handleLogout)
 }

@@ -8,7 +8,7 @@ export interface AuthState {
   registering?: boolean
   actionAuth: "No action" | "Success" | "Failed"
   currentUser?: User
-  token:string
+  token?:string
 }
 
 const initialState: AuthState = {
@@ -16,7 +16,7 @@ const initialState: AuthState = {
   registering: false,
   actionAuth: "No action",
   currentUser: undefined,
-  token:""
+  token:undefined
 }
 
 export const authSlice = createSlice({
@@ -65,6 +65,10 @@ export const authSlice = createSlice({
       state.registering = false
       state.actionAuth = "No action"
       state.currentUser = undefined
+      state.token=undefined
+      localStorage.removeItem(StorageKeys.TOKEN)
+      localStorage.removeItem(StorageKeys.NAMEUSER)
+      localStorage.removeItem(StorageKeys.USER)
     },
     resetAction(state) {
       state.actionAuth = "No action"

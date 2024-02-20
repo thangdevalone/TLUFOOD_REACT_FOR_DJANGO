@@ -49,25 +49,25 @@ export function UserOrders(props: UserOrdersProps) {
       pageIndex: value - 1,
     }))
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (status === "ALL") {
-          const response = await userApi.getBill(pagination, null)
-          const myRes = response.data as RootBillUser
-          setInvoice(myRes.data)
-          setRowCount(Math.ceil(myRes.totalRow/pagination.pageSize))
-        } else {
-          const response = await userApi.getBill(pagination, status)
-          const myRes = response.data as RootBillUser
-          setInvoice(myRes.data)
-          setRowCount(Math.ceil(myRes.totalRow/pagination.pageSize))
-        }
-      } catch (err) {
-        console.log(err)
+  const fetchData = async () => {
+    try {
+      if (status === "ALL") {
+        const response = await userApi.getBill(pagination, null)
+        const myRes = response as unknown as RootBillUser
+        setInvoice(myRes.data)
+        setRowCount(Math.ceil(myRes.totalRow/pagination.pageSize))
+      } else {
+        const response = await userApi.getBill(pagination, status)
+        const myRes = response as unknown as RootBillUser
+        setInvoice(myRes.data)
+        setRowCount(Math.ceil(myRes.totalRow/pagination.pageSize))
       }
+    } catch (err) {
+      console.log(err)
     }
+  }
+  useEffect(() => {
+    
     fetchData()
   }, [status, pagination])
 
@@ -99,8 +99,8 @@ export function UserOrders(props: UserOrdersProps) {
           </Tabs>
         </Box>
         <Box className="flex flex-1 justify-between flex-col gap-4 ">
-          {invoice.map((item) => (
-            <BillItem key={item.id} data={item}/>
+          {invoice?.map((item) => (
+            <BillItem onUpdate={fetchData} key={item.id} data={item}/>
           ))}
           {rowCount > 0 && (
             <div className="flex mt-1 items-center justify-center">

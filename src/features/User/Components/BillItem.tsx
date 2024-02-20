@@ -19,10 +19,11 @@ import {
 import { TransitionProps } from "@mui/material/transitions"
 import dayjs from "dayjs"
 import { useSnackbar } from "notistack"
-import { forwardRef, useState } from "react"
+import { forwardRef, useEffect, useState } from "react"
 
 interface BillItemProps {
-  data: BillUser
+  data: BillUser,
+  onUpdate: ()=>void
 }
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -66,7 +67,7 @@ const BillItem = (props: BillItemProps) => {
       try {
         setLoading(true)
         await userApi.cancelBill(data.id)
-
+        props.onUpdate()
         setLoading(false)
         if (dialog === true) {
           setDialog(false)
@@ -112,6 +113,7 @@ const BillItem = (props: BillItemProps) => {
                 )
               }
               onClick={handleCancelBill}
+              disabled={loading}
               sx={{
                 backgroundColor: "var(--color-df-1)",
                 color: "white",
@@ -151,7 +153,7 @@ const BillItem = (props: BillItemProps) => {
             alignItems="center"
           >
             <span>
-              Đơn hàng #{dayjs(data.createAt).format("DDMMYY")}O{data.id}
+              Đơn hàng #{dayjs(data.create_date).format("DDMMYY")}O{data.id}
             </span>
             <Box>
               <IconButton onClick={() => setDialog(false)}>
@@ -236,19 +238,19 @@ const BillItem = (props: BillItemProps) => {
             <div className="py-2 flex-1">
               <p className="text-base font-semibold mb-2">Tổng đơn hàng</p>
               <p className=" text-sm">
-                {formatCurrencyVND(String(data.totalAmount))}
+                {formatCurrencyVND(String(data.total_amount))}
               </p>
             </div>
             <div className="py-2 flex-1">
               <p className="text-base font-semibold mb-2">Phí vận chuyển</p>
               <p className=" text-sm">
-                {formatCurrencyVND(String(data.shipFee))}
+                {formatCurrencyVND(String(data.ship_fee))}
               </p>
             </div>
             <div className="py-2 flex-1">
               <p className="text-base font-semibold mb-2">Tổng hóa đơn</p>
               <p className=" text-sm">
-                {formatCurrencyVND(String(data.shipFee + data.totalAmount))}
+                {formatCurrencyVND(String(data.ship_fee + data.total_amount))}
               </p>
             </div>
           </div>
@@ -260,7 +262,7 @@ const BillItem = (props: BillItemProps) => {
           </div>
           <div className="py-2">
             <p className="text-base font-semibold mb-2">Giờ nhận hàng</p>
-            <p className=" text-sm">{data?.finishTime || "Không có"}</p>
+            <p className=" text-sm">{data?.finish_time || "Không có"}</p>
           </div>
         </DialogContent>
         <DialogActions sx={{ padding: "16px 24px" }}>
@@ -315,7 +317,7 @@ const BillItem = (props: BillItemProps) => {
                 },
               }}
             >
-              #{dayjs(data.createAt).format("DDMMYY")}O{data.id}
+              #{dayjs(data.create_date).format("DDMMYY")}O{data.id}
             </Box>
           </div>
           <div className="absolute top-8 left-[-4px] z-[2]">
@@ -333,7 +335,7 @@ const BillItem = (props: BillItemProps) => {
                 },
               }}
             >
-              #{dayjs(data.createAt).format("DD/MM/YY")}
+              #{dayjs(data.create_date).format("DD/MM/YY")}
             </Box>
           </div>
         </Box>
@@ -341,7 +343,7 @@ const BillItem = (props: BillItemProps) => {
           <div>
             <p className="font-semibold mb-1 line-clamp-1 text-xl">
               {width < 850 ? "" : "Đơn hàng "}#
-              {dayjs(data.createAt).format("DDMMYY")}O{data.id}{" "}
+              {dayjs(data.create_date).format("DDMMYY")}O{data.id}{" "}
               {data.orderStatus === "CANCELED" ? "(Đã hủy)" : ""}
             </p>
             <p className="text-gray-500 mb-[2px] text-sm line-clamp-2">
@@ -366,7 +368,7 @@ const BillItem = (props: BillItemProps) => {
             )}
             <p className="text-gray-500 mb-[2px] text-sm line-clamp-3">
               <b>Tổng tiền</b>:{" "}
-              {formatCurrencyVND(`${data.totalAmount + data.shipFee}`)}
+              {formatCurrencyVND(`${data.total_amount + data.ship_fee}`)}
             </p>
           </div>
           {width > 600 && (

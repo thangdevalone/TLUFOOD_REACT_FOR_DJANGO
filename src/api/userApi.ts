@@ -10,15 +10,15 @@ const userApi = {
   },
   getBill(page: PageConfig, status: string | null) {
     if (status) {
-      const url = `user/get-bill?pageIndex=${page.pageIndex}&pageSize=${page.pageSize}&orderStatus=${status}`
-      return axiosClient.post(url)
+      const url = `payment/bill?pageIndex=${page.pageIndex+1}&pageSize=${page.pageSize}&orderStatus=${status}`
+      return axiosClient.get(url)
     }
-    const url = `user/get-bill?pageIndex=${page.pageIndex}&pageSize=${page.pageSize}`
-    return axiosClient.post(url)
+    const url = `payment/bill?pageIndex=${page.pageIndex+1}&pageSize=${page.pageSize}`
+    return axiosClient.get(url)
   },
   cancelBill(id: number) {
-    const url = `user/cancel-bill?id=${id}`
-    return axiosClient.put(url)
+    const url = `payment/bill?id=${id}`
+    return axiosClient.patch(url)
   },
   forgotPassword(name: string) {
     // gửi otp quên mk
