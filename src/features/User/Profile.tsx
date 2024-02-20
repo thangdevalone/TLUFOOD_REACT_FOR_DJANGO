@@ -2,7 +2,7 @@ import userApi from "@/api/userApi"
 import { useAppDispatch } from "@/app/hooks"
 import { InputField } from "@/components/FormControls"
 import { useInforUser } from "@/hooks"
-import { UserInfo } from "@/models"
+import { InfoUserChange, UserInfo } from "@/models"
 import { InfoForm } from "@/models/InfoForm"
 import { yupResolver } from "@hookform/resolvers/yup"
 import {
@@ -25,6 +25,7 @@ import * as React from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import * as yup from "yup"
 import { authActions } from "../auth/AuthSlice"
+import cloudAPI from "@/api/axiosCloud"
 
 export interface ProfileProps {}
 
@@ -33,15 +34,38 @@ export function Profile(props: ProfileProps) {
   const { enqueueSnackbar } = useSnackbar()
   const [file, setFile] = React.useState<File | null>(null)
   const imgRef = React.useRef<HTMLInputElement | null>(null)
-  const [imagePreview, setImagePreview] = React.useState<string>("")
   const [otpValue, setOptValue] = React.useState<string>("")
   const [pw, setPw] = React.useState<string>("")
   const [openPw, setOpenPw] = React.useState<boolean>(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo>()
   const [checkUpdateUser, setCheckUpdateUser] = React.useState<string[]>(["a"])
+  const [image, setImage] = React.useState<string>("")
+
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputElement = e.target
+    if (inputElement.files) {
+      const images = new FormData()
+      const selectedFiles = inputElement.files
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i]
+        images.append("file", file)
+        images.append("upload_preset", "oksl1k1o")
+        try {
+          const response = await cloudAPI.uploadImage(images)
+          if (response.status === 200) {
+            setImage(response.data.secure_url)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
+  }
+
   const [payload, setPayload] = React.useState({
     name: "",
     sdt: "",
+    email: "",
   })
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -71,121 +95,67 @@ export function Profile(props: ProfileProps) {
       .min(9, "Quá ngắn")
       .max(11, "Quá dài"),
   })
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedImage = event.target.files && event.target.files[0]
-    if (selectedImage && event.target.files) {
-      setFile(event.target.files[0])
-      const reader = new FileReader()
-      reader.onload = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(selectedImage)
-    }
-  }
+
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
-  const handleSendOtp = async (email: string) => {
+
+  const handleSubmit: SubmitHandler<InfoForm> = async (data) => {
     try {
-      setLoading(true)
-      const response = await userApi.verifyEmail(email)
-      if (response.status) {
-        setOpen(true)
-        setLoading(false)
-      } else {
-        setLoading(false)
-        enqueueSnackbar("Tài khoản của bạn đã được xác thực trước đó !", {
-          variant: "error",
-        })
+      const dataNew = {
+        email: data.email || "",
+        account_name: data.accountName,
+        sdt: data.sdt,
+        img_user: image,
       }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  const handleConfirmUpdate = () => {
-    setOpenPw(false)
-    if (file !== null) handleChangeInfo(payload.name, payload.sdt, file)
-    else handleChangeInfo(payload.name, payload.sdt, null)
-  }
-  const handleSubmit: SubmitHandler<InfoForm> = (data) => {
-    if (data.email?.length && data.email !== user?.email) {
-      handleSendOtp(data.email)
-    }
-    if (
-      data.accountName !== user?.account_name ||
-      data.sdt !== user?.sdt ||
-      file !== null
-    ) {
-      setOpenPw(true)
-      setPayload({ name: data.accountName, sdt: data.sdt })
+      handleSendOtp(dataNew)
+    } catch (error) {
+      console.log(error)
     }
   }
   const dispatch = useAppDispatch()
-  const confirmOtp = async (otp: string) => {
-    try {
-      setLoading(true)
-      const response = await userApi.validate(otp)
-      setLoading(false)
-      enqueueSnackbar("Xác thực gmail thành công !", {
-        variant: "success",
+
+  const handleSendOtp = async (data: InfoUserChange) => {
+    setLoading(true)
+    const res = await userApi
+      .sendOtpChangeInfoUser(data, user?.id + "")
+      .then(() => {
+        setOpen(true)
+        setLoading(false)
       })
-      const resInfor = await userApi.getUserInfo()
-      dispatch(authActions.updateInfor(resInfor.data))
-      setOpen(false)
-    } catch (err) {
-      console.log(err)
-      setLoading(false)
-      enqueueSnackbar("Xác thực gmail thất bại !", {
-        variant: "error",
-      })
-    }
+      .catch(() => {})
   }
 
   const handleClose = () => {
     setOpen(false)
   }
 
-  const handleClosePw = () => {
-    setOpenPw(false)
+  const handleConfirm = async () => {
+    // confirmOtp(otpValue)
+    await userApi
+      .finalOtpChangeInfoUser(otpValue)
+      .then((res: any) => {
+        enqueueSnackbar("Thay đổi thành công !", {
+          variant: "success",
+        })
+        dispatch(authActions.updateInfor(res))
+        setLoading(false)
+        setOpen(false)
+      })
+      .catch(() => {
+        setLoading(false)
+        enqueueSnackbar("Bạn nhập OTP sai vui lòng thử lại !", {
+          variant: "error",
+        })
+        setOptValue('')
+      })
   }
 
-  const handleConfirm = () => {
-    confirmOtp(otpValue)
-  }
-
-  const handleChangeInfo = async (
-    accountName: string,
-    sdt: string,
-    file: File | null,
-  ) => {
-    try {
-      setLoading(true)
-      const response = await userApi.updateUserInformation({
-        password: pw,
-        newPassword: null,
-        accountName,
-        img: file,
-        sdt,
-      })
-      dispatch(authActions.updateInfor(response.data))
-      enqueueSnackbar("Thay đổi thành công !", {
-        variant: "success",
-      })
-
-      setLoading(false)
-    } catch (err) {
-      setLoading(false)
-      enqueueSnackbar("Mật khẩu không chính xác", {
-        variant: "error",
-      })
-      console.log(err)
-    }
-  }
   const form = useForm<InfoForm>({
     defaultValues: {
       accountName: userInfo?.accountName || user?.account_name,
-      sdt: userInfo?.sdt ,
-      msv: userInfo?.username|| user?.username,
-      email: userInfo?.email || user?.email|| undefined,
+      sdt: userInfo?.sdt,
+      msv: userInfo?.username || user?.username,
+      email: userInfo?.email || user?.email || undefined,
     },
     resolver: yupResolver(schema),
   })
@@ -196,7 +166,7 @@ export function Profile(props: ProfileProps) {
         const response = await userApi.getUserInfo()
         if (response.status) {
           setUserInfo(response.data)
-          setImagePreview(response.data.img || user?.img_user || "")
+          setImage(response.data.img || user?.img_user || "")
         }
       } catch (err) {
         console.log(err)
@@ -250,6 +220,7 @@ export function Profile(props: ProfileProps) {
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: "20px" }}
+                disabled={loading}
               >
                 Lưu
               </Button>
@@ -263,7 +234,7 @@ export function Profile(props: ProfileProps) {
             hidden={true}
             type="file"
             id="imageInput"
-            onChange={handleImageChange}
+            onChange={(e) => handleFiles(e)}
             name="imageInput"
             accept="image/png, image/jpeg"
           ></input>
@@ -271,7 +242,7 @@ export function Profile(props: ProfileProps) {
             variant="circular"
             alt="avatar"
             sx={{ width: "100px", height: "100px", mr: 1, mb: 3 }}
-            src={imagePreview}
+            src={image}
             onClick={() => {
               imgRef.current?.click()
             }}
@@ -306,27 +277,6 @@ export function Profile(props: ProfileProps) {
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
           <Button onClick={handleConfirm}>Xác Nhận</Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={openPw} onClose={handleClosePw}>
-        <DialogTitle>Vui lòng nhập mật khẩu</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Password"
-            type="text"
-            fullWidth
-            variant="standard"
-            style={{ width: "20vw" }}
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClosePw}>Hủy</Button>
-          <Button onClick={handleConfirmUpdate}>Xác Nhận</Button>
         </DialogActions>
       </Dialog>
     </div>

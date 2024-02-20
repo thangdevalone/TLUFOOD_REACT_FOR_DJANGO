@@ -14,9 +14,9 @@ export interface User {
 
 
 export interface UpdatePassWord {
-  password: string
-  newPassword: string
-  passwordNewConfirm: string | null
+  current_password: string
+  new_password: string
+  confirm_password: string
 }
 
 export interface UpdateInformationUser {
@@ -33,4 +33,11 @@ export interface UserInfo {
   img: string
   sdt: string
   username: string
+}
+
+export interface InfoUserChange {
+  email: string
+  account_name: string
+  sdt: string
+  img_user: string
 }
