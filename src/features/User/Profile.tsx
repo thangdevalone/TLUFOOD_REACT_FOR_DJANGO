@@ -39,7 +39,7 @@ export function Profile(props: ProfileProps) {
   const [openPw, setOpenPw] = React.useState<boolean>(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo>()
   const [checkUpdateUser, setCheckUpdateUser] = React.useState<string[]>(["a"])
-  const [image, setImage] = React.useState<string>("")
+  const [image, setImage] = React.useState<string>(user?.img_user || '')
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputElement = e.target
@@ -153,7 +153,7 @@ export function Profile(props: ProfileProps) {
   const form = useForm<InfoForm>({
     defaultValues: {
       accountName: userInfo?.accountName || user?.account_name,
-      sdt: userInfo?.sdt,
+      sdt: userInfo?.sdt || user?.sdt,
       msv: userInfo?.username || user?.username,
       email: userInfo?.email || user?.email || undefined,
     },

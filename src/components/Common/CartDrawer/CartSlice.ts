@@ -165,14 +165,18 @@ export const cartSlice = createSlice({
     },
     removerCart(state, action: PayloadAction<CartItemData>) {
       const { idFood, nameStore, idStore } = action.payload
-      state.lengthFood -= 1
+      // state.lengthFood -= 1
+
       const storeIndex = state.dataStore.findIndex(
         (store) => store.name === nameStore && store.id === idStore,
       )
+        
       if (storeIndex !== -1) {
         const store = state.dataStore[storeIndex].items
+        const itemQuantity = store.find(item => item.idFood === idFood)
         const updatedItems = store.filter((food) => food.idFood !== idFood)
         state.dataStore[storeIndex].items = updatedItems
+        state.lengthFood -= itemQuantity?.quantity  || 1
         if (updatedItems.length === 0) {
           state.dataStore = state.dataStore.filter((item, index) => {
             return index !== storeIndex

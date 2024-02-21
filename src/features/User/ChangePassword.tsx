@@ -29,7 +29,7 @@ export function ChangePassword(props: ChangePasswordProps) {
       .string()
       .required("Vui lòng xác nhận mật khẩu mới !")
       .oneOf(
-        [yup.ref("newPassword"), ""],
+        [yup.ref("new_password"), ""],
         "Mật khẩu xác nhận không trùng khớp với mật khẩu mới",
       ),
   })
