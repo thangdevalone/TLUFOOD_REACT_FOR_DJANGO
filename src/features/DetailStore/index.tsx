@@ -103,7 +103,7 @@ const DetailStore = (props: DetailProps) => {
                           Nhiều voucher có sẵn
                         </span>
                       </div>
-                      <p>Đã bán: 0</p>
+                      <p>Đã bán: {data.quantity_sold}</p>
                     </>
                   )}
                 </Box>

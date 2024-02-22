@@ -1,7 +1,10 @@
 import userApi from "@/api/userApi"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { Header, ToppingAccord, VoucherDesign } from "@/components/Common"
-import { cartActions, iDataStore } from "@/components/Common/CartDrawer/CartSlice"
+import {
+  cartActions,
+  iDataStore,
+} from "@/components/Common/CartDrawer/CartSlice"
 import CartList from "@/components/Common/CartDrawer/Components/CartList"
 import { CustomButton } from "@/components/Custom/CustomButon"
 import { SOCKET_URL } from "@/constants"
@@ -49,7 +52,6 @@ export default function Checkout(props: CheckoutProps) {
   const [vouchers, setVouchers] = useState<VoucherItem[]>([])
   const [loading, setLoading] = useState(false)
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const headers = { Authorization: `Bearer ${token}` }
 
   const shipFee =
     cart.totalShip && cart.voucherUse
@@ -92,7 +94,7 @@ export default function Checkout(props: CheckoutProps) {
     console.log(bill)
     ;(async () => {
       setLoading(true)
-        socket?.send(JSON.stringify(bill))
+      socket?.send(JSON.stringify(bill))
       setLoading(false)
     })()
   }
@@ -111,46 +113,66 @@ export default function Checkout(props: CheckoutProps) {
     setOpenConfirm(false)
   }
   const user = useInforUser()
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await userApi.getAllVoucher()
-        setVouchers(res.data as VoucherItem[])
-      } catch (error) {
-        console.log(error)
-      }
-    })()
-    const ws = new WebSocket(SOCKET_URL + "checkout"+`?token=${token}`)
-    setSocket(ws)
-    ws.onopen = () => {
+  const fetchVoucher = async () => {
+    try {
+      const res = await userApi.getAllVoucher()
+      setVouchers(res.data as VoucherItem[])
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
+    fetchVoucher()
+
+    const ws = new WebSocket(SOCKET_URL + "checkout" + `?token=${token}`)
+    setSocket(ws)
+    ws.onopen = () => {}
     ws.onmessage = (event) => {
-      const data=JSON.parse(event.data)
-      console.log(data.type)
-      if (data.type=== "voucher_oot") {
-        enqueueSnackbar("Hết mã rồi vui lòng chọn mã khác và thử lại!", { variant: "error" })
-      } 
-      if (data.type==="created_bill") {
-          enqueueSnackbar("Đặt hàng thành công. Bấm vào đơn mua để xem chi tiết", {
-            variant: "success",
-          })
-          // const newVoucher = data.body.data as VoucherItem[]
-          // setVouchers(newVoucher)
+      const data = JSON.parse(event.data)
+      console.log(data)
+      if (data.type === "voucher_oot") {
+        enqueueSnackbar("Hết mã rồi vui lòng chọn mã khác và thử lại!", {
+          variant: "error",
+        })
+      }
+      if (data.type === "created_bill") {
+        // const newVoucher = data.body.data as VoucherItem[]
+        // setVouchers(newVoucher)
+        if (data.send_by === user?.username) {
+          enqueueSnackbar(
+            "Đặt hàng thành công. Bấm vào đơn mua để xem chi tiết",
+            {
+              variant: "success",
+            },
+          )
           setOpenConfirm(false)
           dispatch(cartActions.resetCart())
-          // if (cart.dataStore.length > 0 && newVoucher) {
-          //   const newVoucherUse = newVoucher.find(
-          //     (item) =>
-          //       item.code === cart.voucherUse?.code &&
-          //       item.quantity !== cart.voucherUse?.quantity,
-          //   )
-          //   if (newVoucherUse) {
-          //     dispatch(cartActions.addVoucherUse(newVoucherUse))
-          //   }
-          // }
         }
-      if(data.type==="error"){
-        enqueueSnackbar("Có lỗi xảy ra vui lòng thử lại sau!", { variant: "error" })
+        if (cart.dataStore.length > 0) {
+          ;(async () => {
+            try {
+              const res = await userApi.getAllVoucher()
+              const data = res.data as VoucherItem[]
+              // console.log(cart)
+              setVouchers(data)
+              const idExist = cart.voucherUse?.id
+              const newVoucherUse = data.find((item) => item.id == idExist)
+              // console.log(newVoucherUse, idExist, data)
+              if (newVoucherUse && newVoucherUse?.quantity > 0) {
+                dispatch(cartActions.addVoucherUse(newVoucherUse))
+              } else {
+                dispatch(cartActions.removeVoucherUse())
+              }
+            } catch (error) {
+              console.log(error)
+            }
+          })()
+        }
+      }
+      if (data.type === "error") {
+        enqueueSnackbar("Có lỗi xảy ra vui lòng thử lại sau!", {
+          variant: "error",
+        })
       }
       // } else {
       //   const newVoucher = data.body.data as VoucherItem[]
@@ -172,7 +194,7 @@ export default function Checkout(props: CheckoutProps) {
     }
 
     return () => {
-      ws.close();
+      ws.close()
     }
   }, [])
   const cssVoucherDialog =

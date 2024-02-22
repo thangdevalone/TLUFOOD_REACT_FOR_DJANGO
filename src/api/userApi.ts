@@ -5,7 +5,7 @@ import axiosClient from "./axiosClient"
 
 const userApi = {
   getAllVoucher() {
-    const url = `payment/vouchers`
+    const url = `auth/vouchers`
     return axiosClient.get(url)
   },
   getBill(page: PageConfig, status: string | null) {

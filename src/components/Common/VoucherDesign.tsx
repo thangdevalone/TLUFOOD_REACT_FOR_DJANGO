@@ -110,9 +110,9 @@ const VoucherXS = (props: {
   blocker: boolean
   pushVoucher: () => void
   removeVoucher: () => void
+  voucherUse:VoucherItem |undefined
 }) => {
-  const { data, pushVoucher, removeVoucher, blocker } = props
-  const voucherUse = useAppSelector((state) => state.cart.voucherUse)
+  const { data, pushVoucher, removeVoucher, blocker,voucherUse } = props
   const { width } = useAppSelector((state) => state.app)
   const [dialog, setDialog] = useState(false)
   return (
@@ -370,10 +370,11 @@ const VoucherMD = (props: {
   blocker: boolean
   pushVoucher: () => void
   removeVoucher: () => void
+  voucherUse:VoucherItem |undefined
+
 }) => {
-  const { data, pushVoucher, removeVoucher, blocker } = props
+  const { data, pushVoucher, removeVoucher, blocker,voucherUse } = props
   const { width } = useAppSelector((state) => state.app)
-  const voucherUse = useAppSelector((state) => state.cart.voucherUse)
   const voucherRef = useRef<HTMLDivElement>(null)
   const [more, setMore] = useState(false)
   const [dialog, setDialog] = useState(false)
@@ -620,9 +621,19 @@ const VoucherMD = (props: {
 export function VoucherDesign(props: { data?: VoucherItem }) {
   const dispatch = useDispatch()
   const { width } = useAppSelector((state) => state.app)
+  const voucherUse = useAppSelector((state) => state.cart.voucherUse)
   const [blocker, setBlocker] = useState(false)
   const { data } = props
   const amount = useAppSelector((state) => state.cart.totalAmount)
+
+  useEffect(()=>{
+    if(data?.quantity!==undefined && data.quantity<=0){
+      setBlocker(true)
+        if (voucherUse?.code === data?.code){
+          removeVoucher()
+        }
+    }
+  },[])
   useEffect(() => {
     if (data?.code.search("MI")!==-1) {
       let minAmount=0
@@ -639,9 +650,11 @@ export function VoucherDesign(props: { data?: VoucherItem }) {
         )
       }
      
-      if (amount && amount < minAmount) {
+      if (amount && amount < minAmount ) {
         setBlocker(true)
-        removeVoucher()
+        if (voucherUse?.code === data?.code){
+          removeVoucher()
+        }
       }
       else{
         setBlocker(false)
@@ -654,6 +667,7 @@ export function VoucherDesign(props: { data?: VoucherItem }) {
     }
   }
   const removeVoucher = () => {
+    console.log('latoi')
     dispatch(cartActions.removeVoucherUse())
   }
   return (
@@ -664,6 +678,7 @@ export function VoucherDesign(props: { data?: VoucherItem }) {
           blocker={blocker}
           pushVoucher={pushVoucher}
           removeVoucher={removeVoucher}
+          voucherUse={voucherUse}
         />
       ) : (
         <VoucherXS
@@ -671,6 +686,8 @@ export function VoucherDesign(props: { data?: VoucherItem }) {
           blocker={blocker}
           pushVoucher={pushVoucher}
           removeVoucher={removeVoucher}
+          voucherUse={voucherUse}
+
         />
       )}
     </>

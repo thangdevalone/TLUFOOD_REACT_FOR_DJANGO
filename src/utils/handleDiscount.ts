@@ -3,16 +3,21 @@ export function handleDiscount(
   discount: number,
   code: string,
 ): number {
+  let res = 0
   if (code.search("K") !== -1) {
-    return price - discount * 1000
+    res = price - discount * 1000
   }
-  if (code.search("MA") !== -1) {
+  else if (code.search("MA") !== -1) {
     const maxDis =
-      Number(code.slice(code.search("MA") + 2, code.length) + "000") ||
-      10000
+      Number(code.slice(code.search("MA") + 2, code.length) + "000") || 10000
     const dis =
       (price * discount) / 100 > maxDis ? maxDis : (price * discount) / 100
-    return price - dis
+    res = price - dis
   }
-  return price - (price * discount) / 100
+  else res = price - (price * discount) / 100
+  if (res > 0) {
+    return res
+  } else {
+    return 0
+  }
 }

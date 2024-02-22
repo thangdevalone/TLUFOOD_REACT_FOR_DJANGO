@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack"
 
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 
 export interface LoadServerProps {}
 function LinearProgressWithLabel(
@@ -35,6 +35,7 @@ export function LoadServer(props: LoadServerProps) {
   const [progress, setProgress] = useState(0)
   const [done, setDone] = useState(false)
   const {enqueueSnackbar}=useSnackbar()
+  const navigate=useNavigate()
   useEffect(() => {
     const timer = setInterval(() => {
       const random = Math.floor(Math.random() * 4) + 1
@@ -63,7 +64,8 @@ export function LoadServer(props: LoadServerProps) {
       } catch (error) {
         console.log(error)
         dispatch(authActions.logout())
-        enqueueSnackbar("Có lỗi hoặc hết hạn token vui lòng tải lại trang",{variant:'error'})
+        navigate("/login")
+        enqueueSnackbar("Có lỗi hoặc hết hạn token vui lòng đăng nhập",{variant:'error'})
 
       }
     })()

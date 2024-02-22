@@ -257,7 +257,7 @@ const BillItem = (props: BillItemProps) => {
           <div className="py-2">
             <p className="text-base font-semibold mb-2">Mã sử dụng</p>
             <p className=" text-sm">
-              {data.voucherResponseBill?.code || "Không sử dụng"}
+              {data.voucherResponseBill || "Không sử dụng"}
             </p>
           </div>
           <div className="py-2">
@@ -363,7 +363,7 @@ const BillItem = (props: BillItemProps) => {
             {width > 500 && (
               <p className="text-gray-500 mb-[2px] text-sm line-clamp-3">
                 <b>Mã sử dụng</b>:{" "}
-                {data.voucherResponseBill?.code || "Không sử dụng"}
+                {data.voucherResponseBill || "Không sử dụng"}
               </p>
             )}
             <p className="text-gray-500 mb-[2px] text-sm line-clamp-3">

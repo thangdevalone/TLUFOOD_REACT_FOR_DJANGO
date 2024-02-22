@@ -70,7 +70,7 @@ export const ItemFood = (props: propsData) => {
   return (
     <Tooltip title="Bấm để thêm vào giỏ hàng">
       <Box
-        className={`w-full p-4 bg-white  rounded-md relative cursor-pointer ${
+        className={`w-full p-4 bg-white  rounded-lg relative cursor-pointer ${
           width < 500 && "flex gap-2"
         }`}
         sx={{

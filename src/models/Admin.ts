@@ -64,15 +64,17 @@ export interface TypeRestaurant {
   star: number
 }
 export interface VoucherItem {
-  id?: number
-  createDate?: string
-  status?: boolean
-  discount: number
-  expired: string
+  id: number
+  create_by: string
+  create_date: string
+  status: boolean
   detail: string
-  code: string
+  expired: string
   quantity: number
+  discount: number
   title: string
+  code: string
+  createAt: string
 }
 export interface RoleUser {
   id: number
@@ -127,7 +129,7 @@ export interface BillUser {
   accountId: number
   total_amount: number
   note: string
-  voucherResponseBill: VoucherResponseBill
+  voucherResponseBill: string
   foodResponseBills: FoodResponseBill[]
 }
 
