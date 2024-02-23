@@ -147,7 +147,7 @@ export function RegisterPage(props: RegisterPageProps) {
         enqueueSnackbar("Phân tích ảnh thành công bấm tiếp tục để đăng kí",{variant:"success"})
       } catch (error) {
         console.log(error)
-        enqueueSnackbar("Phân tích ảnh thất bại",{variant:"success"})
+        enqueueSnackbar("Phân tích ảnh thất bại",{variant:"error"})
       } finally {
         setLoading(false)
       }
