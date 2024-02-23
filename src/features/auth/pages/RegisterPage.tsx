@@ -22,6 +22,8 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import * as yup from "yup"
 import { authActions } from "../AuthSlice"
+import { TheSinhVien as TheSinhVienI } from "@/models/InfoForm"
+import  TheSinhVien  from "./TheSinhVien"
 export interface RegisterPageProps {}
 const options = {
   apiKey: "public_W142iH1DTtrDZfdVtpSbfny5htLw", // This is your API key.
@@ -108,6 +110,7 @@ export function RegisterPage(props: RegisterPageProps) {
       .oneOf([yup.ref("password")], "Mật khẩu không khớp"),
   })
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [anaData,setAnaData]=useState<TheSinhVienI>()
   const form = useForm<RegisterForm>({
     defaultValues: { username: msv },
     resolver: yupResolver(schema),
@@ -126,6 +129,12 @@ export function RegisterPage(props: RegisterPageProps) {
       })
     }
   }, [actionAuth])
+  const handleNextRes2=()=>{
+    if(anaData ===undefined) return
+    setMsv(anaData.msv)
+    form.setValue("account_name",anaData.ho_ten)
+    form.setValue("username",anaData.msv)
+  }
   const handleNextRes = () => {
     if (!file) return
     const formData = new FormData()
@@ -133,15 +142,12 @@ export function RegisterPage(props: RegisterPageProps) {
     ;(async () => {
       try {
         setLoading(true)
-        const res = (await checkSv(formData)) as any
-        if (res?.MSV) {
-          setMsv(res.MSV)
-          form.setValue("username", res.MSV)
-        } else {
-          enqueueSnackbar("Ảnh không rõ nét", { variant: "error" })
-        }
+        const res = (await checkSv(formData)) as unknown as TheSinhVienI
+        setAnaData(res)
+        enqueueSnackbar("Phân tích ảnh thành công bấm tiếp tục để đăng kí",{variant:"success"})
       } catch (error) {
         console.log(error)
+        enqueueSnackbar("Phân tích ảnh thất bại",{variant:"success"})
       } finally {
         setLoading(false)
       }
@@ -176,7 +182,7 @@ export function RegisterPage(props: RegisterPageProps) {
           {msv?.length === 0 && !next ? (
             <div className="flex items-center flex-col pt-[15vh]">
               <p className="font-semibold text-center mb-2 text-xl">
-                Yêu cầu bạn cung cấp ảnh thẻ sinh viên của bạn để tiếp tục
+                Đăng kí ngay với thẻ sinh viên
               </p>
               <p className="text-gray-500 text-center text-sm mb-10">
                 Chúng tôi sẽ không lưu ảnh của bạn, chỉ sử dụng để xác minh bạn
@@ -206,24 +212,41 @@ export function RegisterPage(props: RegisterPageProps) {
                   </Button>
                 </div>
                 <br />
-                {selectedImage && (
+             <div className="flex flex-row gap-3">
+             {selectedImage && (
                   <img
                     src={selectedImage}
                     alt="Uploaded"
                     style={{ maxWidth: "300px" }}
                   />
                 )}
+                {anaData && (       
+                  <TheSinhVien data={anaData}/>
+                )}
+             </div>
               </div>
-              {selectedImage && (
+              {selectedImage && !anaData && (
                 <Button
                   variant="outlined"
                   disabled={loading}
                   onClick={handleNextRes}
                   sx={{ mt: 2 }}
                 >
-                  Tiếp tục với đăng kí
+                  Phân tích ảnh
                 </Button>
               )}
+              {
+                anaData&&(
+                  <Button
+                  variant="outlined"
+                  disabled={loading}
+                  onClick={handleNextRes2}
+                  sx={{ mt: 2 }}
+                >
+                  Tiếp tục với đăng kí
+                </Button>
+                )
+              }
               <p className="text-gray-500 text-sm text-center mt-5">
                 Ảnh phải rõ ràng không mờ, và đầy đủ mã sinh viên, mã vạch,..
                 <a
