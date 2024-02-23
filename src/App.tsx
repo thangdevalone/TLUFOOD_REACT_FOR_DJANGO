@@ -41,6 +41,7 @@ function getWindowDimensions() {
 function App() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const handleClose = () => {
     dispatch(authActions.logout())
     navigate("/login")
@@ -48,7 +49,6 @@ function App() {
   }
   const { width } = getWindowDimensions()
   const theme = useTheme()
-  const dispatch = useAppDispatch()
   useEffect(() => {
     function handleResize() {
       dispatch(appActions.setWidth(getWindowDimensions().width))
