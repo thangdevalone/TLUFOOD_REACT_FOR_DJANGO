@@ -75,7 +75,7 @@ const userApi = {
     return axiosClient.post(url, data)
   },
   finalOtpChangeInfoUser(otp: string) {
-    const url = `auth/final-update-info-user/${otp}`
+    const url = `auth/final-update-info/${otp}`
     return axiosClient.post(url)
   },
   forgotPasswordUser(username: string) {

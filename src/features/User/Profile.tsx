@@ -116,13 +116,14 @@ export function Profile(props: ProfileProps) {
 
   const handleSendOtp = async (data: InfoUserChange) => {
     setLoading(true)
-    const res = await userApi
-      .sendOtpChangeInfoUser(data, user?.id + "")
-      .then(() => {
-        setOpen(true)
-        setLoading(false)
-      })
-      .catch(() => {})
+   try {
+     const res = await userApi.sendOtpChangeInfoUser(data, user?.id + "")
+   } catch (error) {
+    enqueueSnackbar("Bạn nhập OTP sai vui lòng thử lại !", {
+      variant: "error",
+    })
+   }
+    
   }
 
   const handleClose = () => {
