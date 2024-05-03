@@ -151,7 +151,10 @@ export function RegisterPage(props: RegisterPageProps) {
         })
       } catch (error) {
         console.log(error)
-        enqueueSnackbar("Phân tích ảnh thất bại", { variant: "error" })
+        enqueueSnackbar(
+          "Phân tích ảnh thất bại có thể do ảnh không đạt chất lượng",
+          { variant: "error" },
+        )
       } finally {
         setLoading(false)
       }
@@ -177,6 +180,10 @@ export function RegisterPage(props: RegisterPageProps) {
   const handleHome = () => {
     navigate("/")
   }
+
+  useEffect(() => {
+    setAnaData(undefined)
+  }, [file])
 
   return (
     <div className="dot-backg min-h-[100vh] w-screen">
