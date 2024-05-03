@@ -17,23 +17,23 @@ export function PagingFood(props: RecommendFoodProps) {
       pageIndex,
       pageSize: 10,
     })
-    if (response?.status) {
-      const myFood = response as unknown as FoodRoot
-      const newData = [...data, ...myFood.data]
-      setData(newData)
-      if (newData.length >= myFood.totalRow) {
-        setHasMore(false)
-      } else {
-        setPageIndex(pageIndex + 1)
-      }
+    const myFood = response as unknown as FoodRoot
+    const newData = [...data, ...myFood.data]
+    console.log(newData)
+    setData(newData)
+    if (newData.length >= myFood.totalRow) {
+      setHasMore(false)
+    } else {
+      setPageIndex(pageIndex + 1)
     }
   }
 
   const scrollContainerRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
-    if (!scrollContainerRef.current) return
-
+    if (!scrollContainerRef.current) {
+      return
+    }
     const handleScroll = () => {
       const scrollContainer = scrollContainerRef.current
       if (!scrollContainer) return
@@ -75,15 +75,7 @@ export function PagingFood(props: RecommendFoodProps) {
         >
           <Grid container spacing={{ xs: 2, sm: 1, md: 2, lg: 3 }}>
             {data?.map((item) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                key={item.id}
-                className=""
-              >
+              <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                 <ItemFood
                   idFood={item.id}
                   detail={item.detail}

@@ -31,13 +31,12 @@ axiosClient.interceptors.response.use(
     // Do something with response data
     return response.data
   },
-  function (error: AxiosError ) {
+  function (error: AxiosError) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     if (error.response && error.response.status === 401) {
       // Đăng xuất người dùng và chuyển hướng sang trang đăng nhập
       // Xóa token khỏi localStorage hoặc thực hiện bất kỳ thao tác cần thiết để đăng xuất người dùng
-
       console.log("het han token")
     }
     return Promise.reject(error.response?.data)

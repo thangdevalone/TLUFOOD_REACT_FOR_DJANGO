@@ -10,10 +10,14 @@ const userApi = {
   },
   getBill(page: PageConfig, status: string | null) {
     if (status) {
-      const url = `payment/bill?pageIndex=${page.pageIndex+1}&pageSize=${page.pageSize}&orderStatus=${status}`
+      const url = `payment/bill?pageIndex=${page.pageIndex + 1}&pageSize=${
+        page.pageSize
+      }&orderStatus=${status}`
       return axiosClient.get(url)
     }
-    const url = `payment/bill?pageIndex=${page.pageIndex+1}&pageSize=${page.pageSize}`
+    const url = `payment/bill?pageIndex=${page.pageIndex + 1}&pageSize=${
+      page.pageSize
+    }`
     return axiosClient.get(url)
   },
   cancelBill(id: number) {
@@ -65,18 +69,18 @@ const userApi = {
       },
     })
   },
-  getUserInfo() {
-    const url = "user/get-user-info"
+  getUserInfo(id: string) {
+    const url = `auth/get-user-info/${id}`
     return axiosClient.get(url)
   },
 
-  sendOtpChangeInfoUser(data: InfoUserChange, idUser: string) {
-    const url = `auth/update-info-user/${idUser}`
-    return axiosClient.post(url, data)
-  },
-  finalOtpChangeInfoUser(otp: string) {
-    const url = `auth/final-update-info/${otp}`
+  sendOtpChangeInfoUser(idUser: string) {
+    const url = `auth/update-info-user/${+idUser}`
     return axiosClient.post(url)
+  },
+  finalOtpChangeInfoUser(otp: string, data: InfoUserChange) {
+    const url = `auth/final-update-info/${+otp}`
+    return axiosClient.post(url, data)
   },
   forgotPasswordUser(username: string) {
     const url = `auth/forgot-password/${username}`

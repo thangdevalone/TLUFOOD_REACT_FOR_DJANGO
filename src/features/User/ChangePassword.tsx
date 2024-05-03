@@ -24,7 +24,11 @@ export function ChangePassword(props: ChangePasswordProps) {
     new_password: yup
       .string()
       .required("Vui lòng nhập mật khẩu mới !")
-      .min(8, "Mật khẩu mới phải có ít nhất 8 ký tự"),
+      .min(8, "Mật khẩu mới phải có ít nhất 8 ký tự")
+      .notOneOf(
+        [yup.ref("current_password"), ""],
+        "Mật khẩu mới không trùng khớp với mật khẩu cũ",
+      ),
     confirm_password: yup
       .string()
       .required("Vui lòng xác nhận mật khẩu mới !")
@@ -102,13 +106,6 @@ export function ChangePassword(props: ChangePasswordProps) {
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: "20px", width: "100%" }}
-                // onClick={() =>
-                //   handleSubmitChangePw({
-                //     current_password: form.getValues("current_password"),
-                //     new_password: form.getValues("new_password"),
-                //     confirm_password: form.getValues("confirm_password"),
-                //   })
-                // }
               >
                 Lưu
               </Button>

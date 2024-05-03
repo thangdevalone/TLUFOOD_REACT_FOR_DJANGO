@@ -192,9 +192,9 @@ export function LoginPage(props: LoginPageProps) {
                 <Link
                   color="inherit"
                   style={{ textDecoration: "underline" }}
-                  to="https://github.com/thangdevalone"
+                  to="https://github.com/haidaqn"
                 >
-                  @thangdevalone
+                  @haidaqn
                 </Link>{" "}
                 {new Date().getFullYear()}
               </Typography>

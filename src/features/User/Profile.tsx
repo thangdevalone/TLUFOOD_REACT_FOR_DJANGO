@@ -32,14 +32,13 @@ export interface ProfileProps {}
 export function Profile(props: ProfileProps) {
   const user = useInforUser()
   const { enqueueSnackbar } = useSnackbar()
-  const [file, setFile] = React.useState<File | null>(null)
   const imgRef = React.useRef<HTMLInputElement | null>(null)
   const [otpValue, setOptValue] = React.useState<string>("")
-  const [pw, setPw] = React.useState<string>("")
   const [openPw, setOpenPw] = React.useState<boolean>(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo>()
-  const [checkUpdateUser, setCheckUpdateUser] = React.useState<string[]>(["a"])
-  const [image, setImage] = React.useState<string>(user?.img_user || '')
+  const [checkUpdateUser, setCheckUpdateUser] = React.useState<boolean>(true)
+  const [image, setImage] = React.useState<string>(user?.img_user || "")
+  const [dataChange, setDataChange] = React.useState<InfoUserChange>()
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputElement = e.target
@@ -116,14 +115,17 @@ export function Profile(props: ProfileProps) {
 
   const handleSendOtp = async (data: InfoUserChange) => {
     setLoading(true)
-   try {
-     const res = await userApi.sendOtpChangeInfoUser(data, user?.id + "")
-   } catch (error) {
-    enqueueSnackbar("Bạn nhập OTP sai vui lòng thử lại !", {
-      variant: "error",
-    })
-   }
-    
+    try {
+      setDataChange(data)
+      await userApi.sendOtpChangeInfoUser(user?.id + "")
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra vui lòng thực hiện lại !", {
+        variant: "error",
+      })
+    } finally {
+      setOpen(true)
+      setLoading(false)
+    }
   }
 
   const handleClose = () => {
@@ -131,24 +133,26 @@ export function Profile(props: ProfileProps) {
   }
 
   const handleConfirm = async () => {
-    // confirmOtp(otpValue)
-    await userApi
-      .finalOtpChangeInfoUser(otpValue)
-      .then((res: any) => {
-        enqueueSnackbar("Thay đổi thành công !", {
-          variant: "success",
+    if (dataChange) {
+      await userApi
+        .finalOtpChangeInfoUser(otpValue, dataChange)
+        .then((res: any) => {
+          enqueueSnackbar("Thay đổi thành công !", {
+            variant: "success",
+          })
+          dispatch(authActions.updateInfor(res))
+          setLoading(false)
+          setOpen(false)
+          setCheckUpdateUser(!checkUpdateUser)
         })
-        dispatch(authActions.updateInfor(res))
-        setLoading(false)
-        setOpen(false)
-      })
-      .catch(() => {
-        setLoading(false)
-        enqueueSnackbar("Bạn nhập OTP sai vui lòng thử lại !", {
-          variant: "error",
+        .catch(() => {
+          setLoading(false)
+          enqueueSnackbar("Có lỗi xảy ra vui lòng thử lại !", {
+            variant: "error",
+          })
+          setOptValue("")
         })
-        setOptValue('')
-      })
+    }
   }
 
   const form = useForm<InfoForm>({
@@ -164,11 +168,11 @@ export function Profile(props: ProfileProps) {
   React.useEffect(() => {
     const fetchDataUser = async () => {
       try {
-        const response = await userApi.getUserInfo()
-        if (response.status) {
-          setUserInfo(response.data)
-          setImage(response.data.img || user?.img_user || "")
-        }
+        const response = (await userApi.getUserInfo(
+          user?.id + "",
+        )) as unknown as UserInfo
+        setUserInfo(response)
+        setImage(response.img || user?.img_user || "")
       } catch (err) {
         console.log(err)
       }

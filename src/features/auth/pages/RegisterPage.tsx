@@ -4,7 +4,7 @@ import { RegisterForm } from "@/models"
 import { yupResolver } from "@hookform/resolvers/yup"
 import "./styles.css"
 import { checkSv } from "@/api/checkSV"
-import { LockOutlined } from "@mui/icons-material"
+import { ArrowBack, LockOutlined } from "@mui/icons-material"
 import {
   Avatar,
   Box,
@@ -13,17 +13,18 @@ import {
   Container,
   FormControlLabel,
   Grid,
+  IconButton,
   LinearProgress,
   Typography,
 } from "@mui/material"
 import { useSnackbar } from "notistack"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import { authActions } from "../AuthSlice"
 import { TheSinhVien as TheSinhVienI } from "@/models/InfoForm"
-import  TheSinhVien  from "./TheSinhVien"
+import TheSinhVien from "./TheSinhVien"
 export interface RegisterPageProps {}
 const options = {
   apiKey: "public_W142iH1DTtrDZfdVtpSbfny5htLw", // This is your API key.
@@ -49,6 +50,7 @@ function Copyright(props: any) {
 
 export function RegisterPage(props: RegisterPageProps) {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const registering = useAppSelector((state) => state.auth.registering)
   const actionAuth = useAppSelector((state) => state.auth.actionAuth)
   const [msv, setMsv] = useState<string>("")
@@ -110,7 +112,7 @@ export function RegisterPage(props: RegisterPageProps) {
       .oneOf([yup.ref("password")], "Mật khẩu không khớp"),
   })
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [anaData,setAnaData]=useState<TheSinhVienI>()
+  const [anaData, setAnaData] = useState<TheSinhVienI>()
   const form = useForm<RegisterForm>({
     defaultValues: { username: msv },
     resolver: yupResolver(schema),
@@ -129,11 +131,11 @@ export function RegisterPage(props: RegisterPageProps) {
       })
     }
   }, [actionAuth])
-  const handleNextRes2=()=>{
-    if(anaData ===undefined) return
+  const handleNextRes2 = () => {
+    if (anaData === undefined) return
     setMsv(anaData.msv)
-    form.setValue("account_name",anaData.ho_ten)
-    form.setValue("username",anaData.msv)
+    form.setValue("account_name", anaData.ho_ten)
+    form.setValue("username", anaData.msv)
   }
   const handleNextRes = () => {
     if (!file) return
@@ -144,10 +146,12 @@ export function RegisterPage(props: RegisterPageProps) {
         setLoading(true)
         const res = (await checkSv(formData)) as unknown as TheSinhVienI
         setAnaData(res)
-        enqueueSnackbar("Phân tích ảnh thành công bấm tiếp tục để đăng kí",{variant:"success"})
+        enqueueSnackbar("Phân tích ảnh thành công bấm tiếp tục để đăng kí", {
+          variant: "success",
+        })
       } catch (error) {
         console.log(error)
-        enqueueSnackbar("Phân tích ảnh thất bại",{variant:"error"})
+        enqueueSnackbar("Phân tích ảnh thất bại", { variant: "error" })
       } finally {
         setLoading(false)
       }
@@ -168,16 +172,31 @@ export function RegisterPage(props: RegisterPageProps) {
       }
     }
   }
-  const [next,setNext]=useState(false)
+  const [next, setNext] = useState(false)
+
+  const handleHome = () => {
+    navigate("/")
+  }
+
   return (
     <div className="dot-backg min-h-[100vh] w-screen">
+      <IconButton
+        onClick={handleHome}
+        sx={{ position: "absolute" }}
+        className="top-[15px] left-[15px]"
+      >
+        <ArrowBack htmlColor="black" />
+      </IconButton>
       {registering ||
         (loading && (
           <LinearProgress
             sx={{ position: "fixed", top: "0px", left: "0px", width: "100%" }}
           />
         ))}
-      <Container component="main" maxWidth={msv?.length === 0 && !next ? "sm" : "xs"}>
+      <Container
+        component="main"
+        maxWidth={msv?.length === 0 && !next ? "sm" : "xs"}
+      >
         <>
           {msv?.length === 0 && !next ? (
             <div className="flex items-center flex-col pt-[15vh]">
@@ -204,26 +223,29 @@ export function RegisterPage(props: RegisterPageProps) {
                     onClick={() =>
                       fileInputRef.current && fileInputRef.current.click()
                     }
+                    disabled={loading}
                   >
                     Tải Ảnh Lên
                   </Button>
-                  <Button variant="outlined" onClick={()=>setNext(true)}>
+                  <Button
+                    disabled={loading}
+                    variant="outlined"
+                    onClick={() => setNext(true)}
+                  >
                     Bỏ qua
                   </Button>
                 </div>
                 <br />
-             <div className="flex flex-row gap-3">
-             {selectedImage && (
-                  <img
-                    src={selectedImage}
-                    alt="Uploaded"
-                    style={{ maxWidth: "300px" }}
-                  />
-                )}
-                {anaData && (       
-                  <TheSinhVien data={anaData}/>
-                )}
-             </div>
+                <div className="flex flex-row gap-3">
+                  {selectedImage && (
+                    <img
+                      src={selectedImage}
+                      alt="Uploaded"
+                      style={{ maxWidth: "300px" }}
+                    />
+                  )}
+                  {anaData && <TheSinhVien data={anaData} />}
+                </div>
               </div>
               {selectedImage && !anaData && (
                 <Button
@@ -235,9 +257,8 @@ export function RegisterPage(props: RegisterPageProps) {
                   Phân tích ảnh
                 </Button>
               )}
-              {
-                anaData&&(
-                  <Button
+              {anaData && (
+                <Button
                   variant="outlined"
                   disabled={loading}
                   onClick={handleNextRes2}
@@ -245,8 +266,7 @@ export function RegisterPage(props: RegisterPageProps) {
                 >
                   Tiếp tục với đăng kí
                 </Button>
-                )
-              }
+              )}
               <p className="text-gray-500 text-sm text-center mt-5">
                 Ảnh phải rõ ràng không mờ, và đầy đủ mã sinh viên, mã vạch,..
                 <a

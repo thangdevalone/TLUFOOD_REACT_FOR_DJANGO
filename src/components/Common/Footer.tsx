@@ -4,19 +4,23 @@ import { Link } from "react-router-dom"
 
 export interface FooterProps {}
 interface StoreButtonProps {
-  path: string;
-  title: string;
-  app: string;
+  path: string
+  title: string
+  app: string
 }
 const StoreButton: React.FC<StoreButtonProps> = ({ path, title, app }) => (
-  <Stack className="w-[200px] cursor-pointer rounded-xl px-3.5 py-2 bg-white hover:bg-slate-200" direction="row" alignItems="center">
+  <Stack
+    className="w-[200px] cursor-pointer rounded-xl px-3.5 py-2 bg-white hover:bg-slate-200"
+    direction="row"
+    alignItems="center"
+  >
     <img src={path} className="w-[35px]" alt={title} />
     <Stack direction="column" sx={{ ml: 1 }}>
       <span className="text-sm">{title}</span>
       <span className="font-medium text-lg">{app}</span>
     </Stack>
   </Stack>
-);
+)
 
 export function Footer(props: FooterProps) {
   const [rate, setRate] = useState(false)
@@ -28,7 +32,10 @@ export function Footer(props: FooterProps) {
       <div className="container-base base-pd">
         <Grid sx={{ mb: 4 }} container spacing={2}>
           <Grid item xs={3}>
-            <img src="/assets/tlufood.png" style={{ width: "200px",marginTop:"16px" }} />
+            <img
+              src="/assets/tlufood.png"
+              style={{ width: "200px", marginTop: "16px" }}
+            />
           </Grid>
           <Grid item xs={3}>
             <Box
@@ -47,8 +54,8 @@ export function Footer(props: FooterProps) {
                     width: "fit-content",
                   }}
                 >
-                  <Link to={"https://github.com/thangdevalone"} target="_blank">
-                    thangdevalone
+                  <Link to={"https://github.com/haidaqn"} target="_blank">
+                    haidaqn
                   </Link>
                 </Typography>
                 <Typography
@@ -58,7 +65,7 @@ export function Footer(props: FooterProps) {
                   }}
                 >
                   <Link to={"https://github.com/haidaqn"} target="_blank">
-                    haidaqn 
+                    Văn Anh
                   </Link>
                 </Typography>
                 <Typography
@@ -67,11 +74,20 @@ export function Footer(props: FooterProps) {
                     width: "fit-content",
                   }}
                 >
-                  {/* <Link to={"https://github.com/vietcoi2k3"} target="_blank">
-                    vietcoi2k3 (BE)
-                  </Link> */}
+                  <Link to={"https://github.com/haidaqn"} target="_blank">
+                    Quốc Việt
+                  </Link>
                 </Typography>
-               
+                <Typography
+                  sx={{
+                    "&:hover": { textDecoration: "underline" },
+                    width: "fit-content",
+                  }}
+                >
+                  <Link to={"https://github.com/haidaqn"} target="_blank">
+                    Thùy Linh{" "}
+                  </Link>
+                </Typography>
               </Stack>
             </Box>
           </Grid>
@@ -92,11 +108,8 @@ export function Footer(props: FooterProps) {
                     width: "fit-content",
                   }}
                 >
-                  <Link
-                    to={"#"}
-                    target="_blank"
-                  >
-                    Nguyễn Hùng Cường (Teacher_TLU)
+                  <Link to={"#"} target="_blank">
+                    Vũ Anh Tú (Teacher_TLU)
                   </Link>
                 </Typography>
               </Stack>
@@ -115,7 +128,9 @@ export function Footer(props: FooterProps) {
               <Stack direction="column" spacing={1}>
                 <Typography sx={{ "&:hover": { textDecoration: "underline" } }}>
                   <Link
-                    to={"https://docs.google.com/document/d/1AzgImd9LS0Vs1wTFTgnxc51V4ETVlph7FeryDaOox_M/edit?usp=sharing"}
+                    to={
+                      "https://docs.google.com/document/d/1AzgImd9LS0Vs1wTFTgnxc51V4ETVlph7FeryDaOox_M/edit?usp=sharing"
+                    }
                     target="_blank"
                   >
                     Điều khoản và Chính sách bảo mật
@@ -178,13 +193,13 @@ export function Footer(props: FooterProps) {
                 {rate ? 1 : 0}
               </div>
             </button>
-            <Stack direction="row" spacing={2} sx={{mt:2}}>
+            <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
               <StoreButton
                 path="/assets/play-store.svg"
                 app="Google Play"
                 title="Get app on"
               />
-               <StoreButton
+              <StoreButton
                 path="/assets/apple.svg"
                 app="App Store"
                 title="Download on the"

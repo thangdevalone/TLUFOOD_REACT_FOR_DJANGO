@@ -91,7 +91,6 @@ export default function Checkout(props: CheckoutProps) {
     bill["billFoodRequests"] = listBill
     bill["totalAmount"] = cart.totalAmount || 0
     bill["note"] = noteShip
-    console.log(bill)
     ;(async () => {
       setLoading(true)
       socket?.send(JSON.stringify(bill))
