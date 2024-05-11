@@ -34,7 +34,6 @@ export function Profile(props: ProfileProps) {
   const { enqueueSnackbar } = useSnackbar()
   const imgRef = React.useRef<HTMLInputElement | null>(null)
   const [otpValue, setOptValue] = React.useState<string>("")
-  const [openPw, setOpenPw] = React.useState<boolean>(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo>()
   const [checkUpdateUser, setCheckUpdateUser] = React.useState<boolean>(true)
   const [image, setImage] = React.useState<string>(user?.img_user || "")
@@ -60,12 +59,6 @@ export function Profile(props: ProfileProps) {
       }
     }
   }
-
-  const [payload, setPayload] = React.useState({
-    name: "",
-    sdt: "",
-    email: "",
-  })
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const schema = yup.object().shape({

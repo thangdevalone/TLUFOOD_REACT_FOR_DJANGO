@@ -55,7 +55,7 @@ export function Footer(props: FooterProps) {
                   }}
                 >
                   <Link to={"https://github.com/haidaqn"} target="_blank">
-                    haidaqn
+                    Hải Đăng
                   </Link>
                 </Typography>
                 <Typography

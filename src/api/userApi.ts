@@ -75,7 +75,7 @@ const userApi = {
   },
 
   sendOtpChangeInfoUser(idUser: string) {
-    const url = `auth/update-info-user/${+idUser}`
+    const url = `auth/update-info-user/${idUser}`
     return axiosClient.post(url)
   },
   finalOtpChangeInfoUser(otp: string, data: InfoUserChange) {
